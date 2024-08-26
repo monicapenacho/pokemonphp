@@ -25,6 +25,7 @@
 						<a class="nav-link" href="{{path("newPokemon")}}">Crear Pokemon</a>
 					</div>
 				</div>
+				<div>{{ app.user.nombre|default("") }}</div>
 			</nav>
 			{% block contenido %}{% endblock %}
 		</div>

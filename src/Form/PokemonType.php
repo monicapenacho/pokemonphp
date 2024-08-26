@@ -28,7 +28,7 @@ class PokemonType extends AbstractType
                 'multiple' => true,
                 'expanded' => true,
             ])
-            ->add('enviar', SubmitType::class);;
+            ->add('enviar', SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
