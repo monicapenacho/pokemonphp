@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Debilidad;
 use App\Entity\Pokemon;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -55,6 +56,22 @@ class PokemonController extends AbstractController
         $pokemon3->setCodigo(587);
 
         $doctrine->persist($pokemon3);
+
+        $debilidad = new Debilidad();
+        $debilidad->setNombre("fuego");
+        $debilidad2 = new Debilidad();
+        $debilidad2->setNombre("electrico");
+        $debilidad3 = new Debilidad();
+        $debilidad3->setNombre("agua");
+
+        $pokemon->addDebilidade($debilidad);
+        $pokemon2->addDebilidade($debilidad3);
+        $pokemon2->addDebilidade($debilidad2);
+        $pokemon3->addDebilidade($debilidad2);
+
+        $doctrine->persist($debilidad);
+        $doctrine->persist($debilidad2);
+        $doctrine->persist($debilidad3);
         $doctrine->flush();
         return new Response("Pokemons insertados");
     }
