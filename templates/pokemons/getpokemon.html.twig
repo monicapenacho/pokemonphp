@@ -1,6 +1,11 @@
 {% extends "pokemons/basepokemon.html.twig" %}
 {% block contenido %}
 	<div class="container">
+		{% for mensaje in app.flashes("éxito") %}
+			<p>
+				{{mensaje}}
+			</p>
+		{% endfor %}
 		<div class="row">
 			<div class="col text-center">
 				<h2>
