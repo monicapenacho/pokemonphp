@@ -4,8 +4,10 @@ namespace App\Controller;
 
 use App\Entity\Debilidad;
 use App\Entity\Pokemon;
+use App\Form\PokemonType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -74,5 +76,45 @@ class PokemonController extends AbstractController
         $doctrine->persist($debilidad3);
         $doctrine->flush();
         return new Response("Pokemons insertados");
+    }
+
+    #[Route("/new/pokemon", name: "newPokemon")]
+    public function newpokemon(EntityManagerInterface $doctrine, Request $request)
+    {
+        $form = $this->createForm(PokemonType::class);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $pokemon = $form->getData();
+            $doctrine->persist($pokemon);
+            $doctrine->flush();
+            $this->addFlash("éxito", "Pokemon insertado correctamente :)");
+            return $this->redirectToRoute("getpokemon", ["id" => $pokemon->getId()]);
+        }
+        return $this->renderForm("pokemons/newpokemon.html.twig", ["pokemonForm" => $form]);
+    }
+    #[Route("/edit/pokemon/{id}", name: "editPokemon")]
+    public function editpokemon($id, EntityManagerInterface $doctrine, Request $request)
+    {
+        $repository = $doctrine->getRepository(Pokemon::class);
+        $pokemon = $repository->find($id);
+        $form = $this->createForm(PokemonType::class, $pokemon);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $pokemon = $form->getData();
+            $doctrine->persist($pokemon);
+            $doctrine->flush();
+            $this->addFlash("éxito", "Pokemon insertado correctamente :)");
+            return $this->redirectToRoute("getpokemon", ["id" => $pokemon->getId()]);
+        }
+        return $this->renderForm("pokemons/newpokemon.html.twig", ["pokemonForm" => $form]);
+    }
+    #[Route("/delete/pokemon/{id}", name: "deletePokemon")]
+    public function deletepokemon($id, EntityManagerInterface $doctrine, Request $request)
+    {
+        $repository = $doctrine->getRepository(Pokemon::class);
+        $pokemon = $repository->find($id);
+        $doctrine->remove($pokemon);
+        $doctrine->flush();
+        return $this->redirectToRoute("getAllpokemon");
     }
 }
